@@ -1,0 +1,14 @@
+I ran one of the small programs from Task 1 to generate a heap dump
+that would show memory consumption by one of the classes (for now I don't have apps on
+hand that consume a lot of memory). The app was creating a  very large string during a number of cycles.
+
+Screenshots of the reports from VisualVM (generated from a heap dump) are in the folder as well
+(I'm using Idea - free edition for students, profiling feature, as far as I can tell, is deactivated there).
+The report - Summary - obviously shows that after byte[] String is the class that has the largest
+number of instances and is the second by the size of those instances.
+There is also a screenshot that shows the list of Objects showing the count and the size
+of the objects.
+
+All in all heap dumps provide explicit info o what classes produce most of the objects in the app and also shows
+the size of the produced objects. Which is useful in terms of finding memory leaks and ways of memory usage
+optimizations in the app.

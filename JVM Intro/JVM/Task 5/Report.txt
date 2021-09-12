@@ -1,0 +1,51 @@
+I wrote a small console app that contains lots of strings and also consumes strings from console input.
+It's not a huge app to see the effect of string deduplication in full I suppose, but still it showed lower heap usage
+with the option of string deduplication turned on.
+
+I also used options to print stats for the deduplication, below is the report. It shows that 67.6% of the
+inspected strings have been deduplicated.
+
+[31.443s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 14M->2M(128M) 20.518ms
+[31.444s][info][gc,stringdedup] Concurrent String Deduplication (31.443s)
+[31.445s][info][gc,stringdedup] Concurrent String Deduplication 86056.0B->34136.0B(51920.0B) avg 60.3% (31.443s, 31.445s) 1.628ms
+[31.445s][debug][gc,stringdedup]   Last Exec: 1.628ms, Idle: 31274.026ms, Blocked: 0/0.000ms
+[31.445s][debug][gc,stringdedup]     Inspected:            2803
+[31.445s][debug][gc,stringdedup]       Skipped:               0(  0.0%)
+[31.445s][debug][gc,stringdedup]       Hashed:              575( 20.5%)
+[31.445s][debug][gc,stringdedup]       Known:                83(  3.0%)
+[31.445s][debug][gc,stringdedup]       New:                2720( 97.0%)  86056.0B
+[31.445s][debug][gc,stringdedup]     Deduplicated:         1838( 67.6%)  51920.0B( 60.3%)
+[31.445s][debug][gc,stringdedup]       Young:                 0(  0.0%)      0.0B(  0.0%)
+[31.445s][debug][gc,stringdedup]       Old:                1838(100.0%)  51920.0B(100.0%)
+[31.445s][debug][gc,stringdedup]   Total Exec: 1/1.628ms, Idle: 1/31274.026ms, Blocked: 0/0.000ms
+[31.445s][debug][gc,stringdedup]     Inspected:            2803
+[31.445s][debug][gc,stringdedup]       Skipped:               0(  0.0%)
+[31.445s][debug][gc,stringdedup]       Hashed:              575( 20.5%)
+[31.445s][debug][gc,stringdedup]       Known:                83(  3.0%)
+[31.445s][debug][gc,stringdedup]       New:                2720( 97.0%)  86056.0B
+[31.445s][debug][gc,stringdedup]     Deduplicated:         1838( 67.6%)  51920.0B( 60.3%)
+[31.445s][debug][gc,stringdedup]       Young:                 0(  0.0%)      0.0B(  0.0%)
+[31.445s][debug][gc,stringdedup]       Old:                1838(100.0%)  51920.0B(100.0%)
+[31.445s][debug][gc,stringdedup]   Table
+[31.445s][debug][gc,stringdedup]     Memory Usage: 215.9K
+[31.445s][debug][gc,stringdedup]     Size: 2048, Min: 1024, Max: 16777216
+[31.445s][debug][gc,stringdedup]     Entries: 8528, Load: 416.4%, Cached: 0, Added: 8528, Removed: 0
+[31.445s][debug][gc,stringdedup]     Resize Count: 1, Shrink Threshold: 1365(66.7%), Grow Threshold: 4096(200.0%)
+[31.445s][debug][gc,stringdedup]     Rehash Count: 0, Rehash Threshold: 120, Hash Seed: 0x0
+[31.445s][debug][gc,stringdedup]     Age Threshold: 3
+[31.445s][debug][gc,stringdedup]   Queue
+[31.445s][debug][gc,stringdedup]     Dropped: 0
+
+With deduplication heap usage is 18M, peak at 23M (from VisualVM)
+Heap usage never really peaked drammatically. When I added only the same elements over and over again, heap usage
+never really peaked (staying on 7-10M).
+
+Without deduplication overall heap usage was not really high, ±20M. Though when started adding lots of the same elements as before,
+usage started to grow rather quickly (up to 31M).
+
+Conclusion: my silly app doesn't really show the great mighty force of the string deduplication (as the objects there
+don't even live that long), but even it does show that heap usage is lower and more stable with deduplication than without it.
+
+
+
+
